@@ -1,0 +1,25 @@
+// genesis.json[done]
+validater address should add to extradata
+
+// generate [done]
+$ geth --datadir validater1 account new
+$ geth --datadir validater2 account new
+- add this account to genesis,json
+
+// setup [done]
+$ geth init --datadir bootnode genesis.json
+$ geth init --datadir validater1 genesis.json
+$ geth init --datadir validater2 genesis.json
+$ geth init --datadir node genesis.json
+
+// start bootnodes
+geth --datadir bootnode --networkid 12345 --discovery.port 30305 --authrpc.port 8551
+
+// start validater1
+geth --datadir validater1 --port 30306 --bootnodes 'enode://ad7854b0fbfca57a17a2123c5a82110bd2a1d95983bf60959e7909a6888746bf270a22a410075f05c1fe91562a3f239a2ff03811ddbdc46a2829b8f6a2f98812@127.0.0.1:30303?discport=30305' --networkid 12345 --unlock 0x763832404793e3fac0450cFc8632C61B79519e5b --password validater1/password.txt --authrpc.port 8552 --mine
+
+// start validater2
+geth --datadir validater2 --port 30307 --bootnodes 'enode://ad7854b0fbfca57a17a2123c5a82110bd2a1d95983bf60959e7909a6888746bf270a22a410075f05c1fe91562a3f239a2ff03811ddbdc46a2829b8f6a2f98812@127.0.0.1:30303?discport=30305' --networkid 12345 --unlock 0x2a72e27CBb3DfAbA9fBBeB7d451b1832C56BC90D --password validater2/password.txt --authrpc.port 8553 --mine
+
+// start node, publish port 8085
+geth --datadir node --bootnodes 'enode://ad7854b0fbfca57a17a2123c5a82110bd2a1d95983bf60959e7909a6888746bf270a22a410075f05c1fe91562a3f239a2ff03811ddbdc46a2829b8f6a2f98812@127.0.0.1:30303?discport=30305' --networkid 12345 --http --http.port 8085 --authrpc.port 8554 --port 30310
